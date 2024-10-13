@@ -5,9 +5,9 @@
 
 ## Features
 
-- Automatically send keep-alive requests to claim points
-- Multi-account
-- Auto loop
+- Automatically send keep-alive requests to claim points.
+- Multi-account.
+- Auto loop.
 
 
 ## Installing and setup
