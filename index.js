@@ -1,6 +1,6 @@
 const axios = require('axios');
 const https = require('https');
-const accountsData = require('./accounts'); // account data
+const accountsData = require('./accounts');
 
 const apiEndpoints = {
     keepalive: "https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive",
@@ -11,11 +11,10 @@ const ignoreSslAgent = new https.Agent({
     rejectUnauthorized: false
 });
 
-// Random delay function to simulate uniqueness
 const randomDelay = (min, max) => {
     return new Promise(resolve => {
         const delayTime = Math.floor(Math.random() * (max - min + 1)) + min;
-        setTimeout(resolve, delayTime * 1000); // Convert to milliseconds
+        setTimeout(resolve, delayTime * 1000);
     });
 };
 
@@ -104,9 +103,8 @@ const processAccounts = async () => {
         }
 
         console.log(`📋 All accounts done processed. Total points : ${totalPoints}`);
-        await countdown(160); // Countdown before the next cycle
+        await countdown(160);
     }
 };
 
-// Start the execution
 processAccounts();
