@@ -1,6 +1,8 @@
 const axios = require('axios');
 const https = require('https');
 const accountsData = require('./accounts');
+const proxies = require('./proxy');
+const config = require('./config');
 
 const apiEndpoints = {
     keepalive: "https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive",
@@ -20,7 +22,9 @@ const randomDelay = (min, max) => {
 
 const displayWelcome = () => {
     console.log(`
-🌟 DAWN Validator Extension automatic claim 🌟
+ -----------------------------------------------
+|🌟 DAWN Validator Extension automatic claim 🌟|
+ -----------------------------------------------
     `);
 };
 
@@ -29,7 +33,7 @@ const fetchPoints = async (headers) => {
         const response = await axios.get(apiEndpoints.getPoints, { headers, httpsAgent: ignoreSslAgent });
         if (response.status === 200 && response.data.status) {
             const { rewardPoint, referralPoint } = response.data.data;
-            return (
+            const totalPoints = (
                 (rewardPoint.points || 0) +
                 (rewardPoint.registerpoints || 0) +
                 (rewardPoint.signinpoints || 0) +
@@ -39,6 +43,9 @@ const fetchPoints = async (headers) => {
                 (rewardPoint.bonus_points || 0) +
                 (referralPoint.commission || 0)
             );
+			console.log(` `);
+            console.log(`📊 Points: ${totalPoints}`);
+            return totalPoints;
         } else {
             console.error(`❌ Failed to retrieve the points: ${response.data.message || 'Unknown error'}`);
         }
@@ -59,13 +66,13 @@ const keepAliveRequest = async (headers, email) => {
     try {
         const response = await axios.post(apiEndpoints.keepalive, payload, { headers, httpsAgent: ignoreSslAgent });
         if (response.status === 200) {
-            console.log(`✅ Success, ${email}: ${response.data.message}`);
+            console.log(`✅ Keep-Alive Success for ${email}: ${response.data.message}`);
             return true;
         } else {
-            console.warn(`🚫 Error, ${email}: ${response.status} - ${response.data.message || 'Unknown error'}`);
+            console.warn(`🚫 Keep-Alive Error for ${email}: ${response.status} - ${response.data.message || 'Unknown error'}`);
         }
     } catch (error) {
-        console.error(`⚠️ Request error, ${email}: ${error.message}`);
+        console.error(``);
     }
     return false;
 };
@@ -80,30 +87,50 @@ const countdown = async (seconds) => {
 
 const processAccounts = async () => {
     displayWelcome();
+    const totalProxies = proxies.length;
+
     while (true) {
         let totalPoints = 0;
 
-        for (const { email, token } of accountsData) {
+        for (let i = 0; i < accountsData.length; i++) {
+            const { email, token } = accountsData[i];
+            const proxy = config.useProxy ? proxies[i % totalProxies] : undefined;
+
             const headers = {
                 "Accept": "*/*",
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
             };
 
-            console.log(`🔍 Processing: ${email}...`);
+            if (proxy) headers['Proxy'] = proxy; // Set proxy if applicable
+			console.log(`----------------------------------------------------------------`);
+            console.log(`🔍 Processing: ${email} using proxy: ${proxy || 'No Proxy'}...`);
             const points = await fetchPoints(headers);
             totalPoints += points;
 
-            const success = await keepAliveRequest(headers, email);
-            if (!success) {
-                console.log(`❌ Failed to send active package to ${email} accounnt.\n`);
+            if (points > 0) {
+                const success = await keepAliveRequest(headers, email);
+                if (!success) {
+                    console.log(`✅ Keep-Alive Success for ${email} account.\n`);
+                }
+                await randomDelay(config.minDelay, config.maxDelay);
+                const newPoints = await fetchPoints(headers); // Check points again
+                if (newPoints === 0) {
+                    console.error(`⚠️ Points are zero after keep-alive for ${email}.`);
+					console.log(`----------------------------------------------------------------`);
+                } else {
+                    console.log(`📈 Points increased for ${email}: ${newPoints - points}`);
+					console.log(`----------------------------------------------------------------`);
+                }
+            } else {
+                console.error(`❌ No points available for ${email}.`);
+				console.log(`----------------------------------------------------------------`);
             }
-            await randomDelay(1, 3);
         }
 
-        console.log(`📋 All accounts done processed. Total points : ${totalPoints}`);
-        await countdown(160);
+        console.log(`📋 All accounts processed. Total points: ${totalPoints}`);
+        await countdown(config.restartDelay);
     }
 };
 
