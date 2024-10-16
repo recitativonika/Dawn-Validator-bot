@@ -40,9 +40,9 @@
 		{ email: "user2@example.com", token: "token2" },
 		// Add more accounts as needed
 	];
-```
+	```
 3. Edit and adjust the `config.js` for proxy and delay options.
-```
+	```
 	// config.js
 	module.exports = {
 		useProxy: false, // Set to true if you want to run with proxies
@@ -50,7 +50,7 @@
 		maxDelay: 10,
 		restartDelay: 160,
 	};
-```
+	```
 4. Edit the `proxy.js` if you want to use proxy
 5. Run the script to start, use :
     ```
