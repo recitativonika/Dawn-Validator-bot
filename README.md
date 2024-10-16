@@ -34,7 +34,7 @@
 1. Login/register Dawn Validator account and login, get the token in "getpoint?appid=" -> "authorization:" at network tab in inspect element in browser. 
 2. In `dawn-validator` directory, Edit and adjust this line in `account.js` and save it
 	```
-		// accounts.js
+	// accounts.js
 	module.exports = [
 		{ email: "user1@example.com", token: "token1" },
 		{ email: "user2@example.com", token: "token2" },
@@ -60,4 +60,5 @@
 	
 	
 Dawn Validator Extension : https://chromewebstore.google.com/detail/dawn-validator-chrome-ext/fpdkjdnhkakefebpekbdhillbhonfjjp?authuser=0&hl=en
-My reff code : 9lv10g33
+
+My reff code if you want :) : 9lv10g33
