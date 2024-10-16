@@ -103,7 +103,7 @@ const processAccounts = async () => {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
             };
 
-            if (proxy) headers['Proxy'] = proxy; // Set proxy if applicable
+            if (proxy) headers['Proxy'] = proxy;
 			console.log(`----------------------------------------------------------------`);
             console.log(`🔍 Processing: ${email} using proxy: ${proxy || 'No Proxy'}...`);
             const points = await fetchPoints(headers);
@@ -115,7 +115,7 @@ const processAccounts = async () => {
                     console.log(`✅ Keep-Alive Success for ${email} account.\n`);
                 }
                 await randomDelay(config.minDelay, config.maxDelay);
-                const newPoints = await fetchPoints(headers); // Check points again
+                const newPoints = await fetchPoints(headers);
                 if (newPoints === 0) {
                     console.error(`⚠️ Points are zero after keep-alive for ${email}.`);
 					console.log(`----------------------------------------------------------------`);
