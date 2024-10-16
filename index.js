@@ -115,12 +115,8 @@ const processAccounts = async () => {
                     console.log(`✅ Keep-Alive Success for ${email} account.\n`);
                 }
                 await randomDelay(config.minDelay, config.maxDelay);
-                const newPoints = await fetchPoints(headers);
-                if (newPoints === 0) {
+                if (points === 0) {
                     console.error(`⚠️ Points are zero after keep-alive for ${email}.`);
-					console.log(`----------------------------------------------------------------`);
-                } else {
-                    console.log(`📈 Points increased for ${email}: ${newPoints - points}`);
 					console.log(`----------------------------------------------------------------`);
                 }
             } else {
