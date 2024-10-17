@@ -85,6 +85,14 @@ const countdown = async (seconds) => {
     console.log("\n🔄 Restarting...\n");
 };
 
+const countdownAccountDelay = async (seconds) => {
+    for (let i = seconds; i > 0; i--) {
+        process.stdout.write(`⏳ Waiting for account processing in: ${i} seconds...\r`);
+        await randomDelay(1, 1);
+    }
+    console.log("\n");
+};
+
 const processAccounts = async () => {
     displayWelcome();
     const totalProxies = proxies.length;
@@ -104,7 +112,7 @@ const processAccounts = async () => {
             };
 
             if (proxy) headers['Proxy'] = proxy;
-			console.log(`----------------------------------------------------------------`);
+            console.log(`----------------------------------------------------------------`);
             console.log(`🔍 Processing: ${email} using proxy: ${proxy || 'No Proxy'}...`);
             const points = await fetchPoints(headers);
             totalPoints += points;
@@ -114,15 +122,12 @@ const processAccounts = async () => {
                 if (!success) {
                     console.log(`✅ Keep-Alive Success for ${email} account.\n`);
                 }
-                await randomDelay(config.minDelay, config.maxDelay);
-                if (points === 0) {
-                    console.error(`⚠️ Points are zero after keep-alive for ${email}.`);
-					console.log(`----------------------------------------------------------------`);
-                }
             } else {
                 console.error(`❌ No points available for ${email}.`);
-				console.log(`----------------------------------------------------------------`);
+                console.log(`----------------------------------------------------------------`);
             }
+
+            await countdownAccountDelay(config.accountDelay);
         }
 
         console.log(`📋 All accounts processed. Total points: ${totalPoints}`);
