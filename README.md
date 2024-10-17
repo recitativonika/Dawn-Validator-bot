@@ -51,7 +51,6 @@
 	    restartDelay: 160, // Delay in seconds before restarting the process
 	    accountDelay: 30, // Custom delay in seconds before processing the next account
 	};
-
 	```
 4. Edit the `proxy.js` if you want to use proxy
 5. Run the script to start, use :
