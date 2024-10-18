@@ -32,7 +32,7 @@
 ### Setup and run
 
 1. Login/register Dawn Validator account and login, get the token in "getpoint?appid=" -> "authorization:" at network tab in inspect element in browser. 
-2. In `dawn-validator` directory, Edit and adjust this line in `account.js` and save it
+2. In `Dawn-Validator-bot` directory, Edit and adjust this line in `accounts.js` and save it
 	```
 	// accounts.js
 	module.exports = [
