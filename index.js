@@ -139,7 +139,6 @@ const processAccount = async (account, proxy, appIds) => {
     if (success) {
         console.log(`✅ Keep-Alive Success for: \x1b[36m${email}\x1b[0m`);
     } else {
-        console.warn(`⚠️ Error during keep-alive request for \x1b[36m${email}\x1b[0m: Request failed with status code 502`);
         console.warn(`❌ Keep-Alive Failed for: \x1b[36m${email}\x1b[0m`);
     }
 
