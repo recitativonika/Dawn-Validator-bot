@@ -81,7 +81,7 @@ const keepAliveRequest = async (headers, email, appId) => {
         username: email,
         extensionid: "fpdkjdnhkakefebpekbdhillbhonfjjp",
         numberoftabs: 0,
-        _v: "1.1.1"
+        _v: "1.1.2"
     };
 
     try {
